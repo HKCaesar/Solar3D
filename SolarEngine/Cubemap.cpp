@@ -203,6 +203,30 @@ CubemapSurface* Cubemap::getFace(float alt, float azimuth)
 	return getFace(face);
 }
 
+Cubemap::Cubemap()
+	: osg::Group()
+{
+	//getOrCreateStateSet()->setMode(GL_BLEND, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
+	//getOrCreateStateSet()->setMode(GL_CULL_FACE, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
+	static char vertexSource[] =
+		"void main(void)\n"
+		"{\n"
+		"   gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+		"   gl_TexCoord[1] = gl_MultiTexCoord1;\n"
+		"   gl_TexCoord[2] = gl_MultiTexCoord2;\n"
+		"   gl_TexCoord[3] = gl_MultiTexCoord3;\n"
+		"   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"}\n";
+	static char fragmentSource[] =
+		"void main(void) \n"
+		"{\n"
+		"    gl_FragColor = vec4(1,1,0,1);\n"
+		"}\n";
+	m_programBinder.setVertexShader(vertexSource);
+	//m_programBinder.setFragmentShader(fragmentSource);
+	m_programBinder.initialize("cubeProgram", getOrCreateStateSet(), true);
+}
+
 bool Cubemap::isShadowed(double alt, double azimuth)
 {
 	CubemapSurface* face = getFace(alt, azimuth);
@@ -215,4 +239,3 @@ bool Cubemap::isShadowed(double alt, double azimuth)
 	osg::Vec4 color = faceImage->getColor(osg::Vec2(u, v));
 	return color.a() > 0.95;
 }
-

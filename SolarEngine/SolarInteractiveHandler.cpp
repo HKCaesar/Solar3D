@@ -19,6 +19,7 @@ SolarInteractiveHandler::SolarInteractiveHandler(
 	m_resultsCallback = resultsCallback;
 	m_sceneNode = sceneNode;
 	m_mapNode = mapNode;
+	m_wgs84 = nullptr;
 
   if (m_mapNode)
 		m_cubemap = Cubemap::create(512, mapNode);
@@ -100,6 +101,13 @@ void SolarInteractiveHandler::processIntersection(osgUtil::LineSegmentIntersecto
 		surfaceNormal.normalize();
 	}
 
+	SolarParam param = *m_solarParam;
+	param.m_lon = geoPos.x();
+	param.m_lat = geoPos.y();
+	param.m_elev = param.m_elev + max(geoPos.z(), 0);
+	param.m_slope = Utils::calculateSlope(surfaceNormal);
+	param.m_aspect = Utils::calculateAspect(surfaceNormal);
+
 	for (int i = 0; i < m_cubemap->getNumChildren(); i++)
 	{
 		CubemapSurface* cameraBuffer = (CubemapSurface*)m_cubemap->getChild(i);
@@ -107,6 +115,9 @@ void SolarInteractiveHandler::processIntersection(osgUtil::LineSegmentIntersecto
 		cameraBuffer->m_local2World = local2world;
 		cameraBuffer->update();
 	}
+	
+	//m_cubemap->setWallShaderOn(param.m_slope > 85);
+
 	m_cubemap->setNodeMask(true);
 	//_viewer->setCameraManipulator(nullptr, false);
 	//_viewer->getCamera()->setNodeMask(false);
@@ -120,22 +131,17 @@ void SolarInteractiveHandler::processIntersection(osgUtil::LineSegmentIntersecto
 	//_viewer->getCamera()->setNodeMask(true);
 
 	//Write out fisheye images
-	//for (size_t i = 0; i < _cubemap->getNumChildren(); i++)
-	//{
-	//	CubemapSurface* face = _cubemap->getFace(i);
-	//	osgDB::writeImageFile(*face->Image(), face->getName() + ".png");
-	//}
+	for (size_t i = 0; i < m_cubemap->getNumChildren(); i++)
+	{
+		CubemapSurface* face = m_cubemap->getFace(i);
+		//osgDB::writeImageFile(*face->Image(), face->getName() + ".png");
+	}
 	//osg::ref_ptr<osg::Image> fisheye = _cubemap->toHemisphericalImage(512, 512);
 	//osgDB::writeImageFile(*fisheye, "fisheye2.png");
-	//osgDB::writeImageFile(*_cubemap2fisheyeCamera->Image(), "fisheye.png");
+	//osgDB::writeImageFile(*m_cubemap2fisheyeCamera->Image(), "fisheye.png");
 	double svf = Utils::calSVF(m_cubemap2fisheyeCamera->Image().get(), false);
 
-	SolarParam param = *m_solarParam;
-	param.m_lon = geoPos.x();
-	param.m_lat = geoPos.y();
-	param.m_elev = param.m_elev + max(geoPos.z(), 0);
-	param.m_slope = Utils::calculateSlope(surfaceNormal);
-	param.m_aspect = Utils::calculateAspect(surfaceNormal);
+
 	SolarRadiation solarRad = calSolar(param);
 	solarRad.m_svf = svf;
 	m_resultsCallback(svf, solarRad);
@@ -266,6 +272,13 @@ std::tuple<bool, osg::Vec3d, osg::Matrixd> SolarInteractiveHandler::getGeoTransf
 	if (!m_mapNode)
 		return std::make_tuple(false, worldPos, local2World);
 	osg::Vec3d geoPos;
+	if (!m_mapNode->getMapSRS()->isGeographic()) 
+	{
+		if(!m_wgs84)
+			m_wgs84 = osgEarth::SpatialReference::create("wgs84");
+		m_mapNode->getMapSRS()->transform(worldPos, m_wgs84, geoPos);
+		return std::make_tuple(true, geoPos, local2World);
+	}
 	m_mapNode->getMapSRS()->transformFromWorld(worldPos, geoPos);
 	m_mapNode->getMapSRS()->createLocalToWorld(geoPos, local2World);
 	local2World = local2World * osg::Matrixd::translate(-local2World.getTrans());

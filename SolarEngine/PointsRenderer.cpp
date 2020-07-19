@@ -197,7 +197,7 @@ void PointsRenderer::exportPoints(const std::string& filename)
 		return;
 
 	std::ofstream ofs(filename);
-	ofs << "lat,lon,elev,3D position,start day,end day,time step,linke,slope,aspect,global[kWh/m2],beam[kWh/m2],diffuse[kWh/m2],reflected[kWh/m2],SVF\n";
+	ofs << "lat,lon,elev,3D position,start day,end day,time step,linke,slope,aspect,global[kWh/m2],beam[kWh/m2],diffuse[kWh/m2],reflected[kWh/m2],SkyViewFactor\n";
 	for (int i = 0; i < numChildren; i++)
 	{
 		TextLOD* lod = dynamic_cast<TextLOD*>(getChild(i));

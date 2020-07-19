@@ -55,5 +55,6 @@ private:
 	OnResultsUpdated m_resultsCallback;
 	SolarParam* m_solarParam;
 	RenderSurface* m_cubemap2fisheyeCamera;
+	osgEarth::SpatialReference* m_wgs84;
 };
 

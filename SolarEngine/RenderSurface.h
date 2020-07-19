@@ -57,12 +57,15 @@ public:
 
 	ProgramBinder() { m_stateset = nullptr; }
 
-	void initialize(const std::string& name, osg::StateSet* stateset)
+	void initialize(const std::string& name, osg::StateSet* stateset, bool override = false)
 	{
 		m_program = new osg::Program;
 		m_stateset = stateset;
 		m_program->setName(name);
-		m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::ON);
+		if(override)
+			m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		else
+			m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::ON);
 	}
 
 	void setVertexShader(const std::string& source) 
@@ -100,6 +103,24 @@ public:
 		m_program->setName(name.data());
 		m_vertexShader->setName((name + ".vertex").data());
 		m_fragmentShader->setName((name + ".fragment").data());
+	}
+
+	void attach(bool on, bool override = false)
+	{
+		if (on)
+		{
+			if (override)
+				m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+			else
+				m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::ON);
+		}
+		else
+		{
+			if (override)
+				m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::OFF);
+			else
+				m_stateset->setAttributeAndModes(m_program.get(), osg::StateAttribute::OFF);
+		}
 	}
 
 private:

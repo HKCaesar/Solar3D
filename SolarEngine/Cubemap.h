@@ -30,7 +30,7 @@ public:
 class Cubemap : public osg::Group
 {
 private:
-	Cubemap() : osg::Group() {  }
+	Cubemap();
 public:
 	static Cubemap* create(int imageSize, osg::Node* scene = nullptr);
 	CubemapSurface* getFace(int face);
@@ -40,4 +40,6 @@ public:
 	RenderSurface* toHemisphericalSurface();
 	osg::Image* toHemisphericalImage(int width, int height);
 	bool isShadowed(double alt, double azimuth);
+private:
+	ProgramBinder m_programBinder;
 };
