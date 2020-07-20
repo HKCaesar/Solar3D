@@ -15,6 +15,7 @@
 #include <osgEarth/ThreadingUtils>
 #include <osgEarth/Metrics>
 #include <osgEarthUtil/ExampleResources>
+#include <osgEarth/Registry>
 
 #include "CustomControls.h"
 #include "GrassSolar.h"
@@ -716,7 +717,14 @@ int main(int argc, char** argv)
   // thread-safe initialization of the OSG wrapper manager. Calling this here
   // prevents the "unsupported wrapper" messages from OSG
   osgDB::Registry::instance()->getObjectWrapperManager()->findWrapper("osg::Image");
- 
+
+  // establish our IO options:
+  osg::ref_ptr<const osgDB::Options> localOptions = osgEarth::Registry::instance()->getDefaultOptions();
+
+  osgEarth::URI url("./data/models/TEST.oap3d");
+  osgEarth::ReadResult oap3d = url.readNode();
+
+  // if we have an option string, incorporate it.
   osg::ref_ptr<osg::Node> scene = MapNodeHelper().load(arguments, &viewer);
   if (!scene)
   {

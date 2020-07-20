@@ -32,3 +32,7 @@
 /bin/NEG_X.png
 /bin/fisheye2.png
 /bin/fisheye.png
+/.vs/osgdb_oap3d/v16/.suo
+*.db
+/OAP3DPlugin/.vs/osgdb_oap3d/v16
+*.lnk
