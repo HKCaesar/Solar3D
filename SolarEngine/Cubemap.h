@@ -40,6 +40,7 @@ public:
 	RenderSurface* toHemisphericalSurface();
 	osg::Image* toHemisphericalImage(int width, int height);
 	bool isShadowed(double alt, double azimuth);
+	void setWallShaderOn(bool on);
 private:
 	ProgramBinder m_programBinder;
 };

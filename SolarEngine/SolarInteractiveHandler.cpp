@@ -116,7 +116,7 @@ void SolarInteractiveHandler::processIntersection(osgUtil::LineSegmentIntersecto
 		cameraBuffer->update();
 	}
 	
-	//m_cubemap->setWallShaderOn(param.m_slope > 85);
+	m_cubemap->setWallShaderOn(param.m_slope > 85 && isEarth());
 
 	m_cubemap->setNodeMask(true);
 	//_viewer->setCameraManipulator(nullptr, false);

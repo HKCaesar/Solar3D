@@ -239,3 +239,8 @@ bool Cubemap::isShadowed(double alt, double azimuth)
 	osg::Vec4 color = faceImage->getColor(osg::Vec2(u, v));
 	return color.a() > 0.95;
 }
+
+void Cubemap::setWallShaderOn(bool on)
+{
+	m_programBinder.attach(on,on);
+}
