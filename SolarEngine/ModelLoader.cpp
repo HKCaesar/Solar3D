@@ -8,6 +8,7 @@
 #include "osgUtil/SmoothingVisitor"
 #include "osgDB/writeFile"
 #include "osgDB/readFile"
+#include "osg/MatrixTransform"
 
 ModelLoader::ModelLoader()
 {
@@ -146,15 +147,48 @@ osg::Node* ModelLoader::LoadModel(std::string path, bool& isIntegratedMesh)
 		if(QFileInfo(path.data()).exists())
 				return osgDB::readNodeFile(path);
 
-		if (QDir(path.data()).exists())
+		std::string dir = path;
+		if (!QDir(path.data()).exists())
 		{
-				osg::Node* node = Load3DTiles(path);
-				if (node)
-						isIntegratedMesh = true;
-				return node;
+			std::size_t found = path.find_last_of(".");
+			if (found == std::string::npos)
+				return nullptr;
+			dir = path.substr(0, found) + "/";
 		}
+		
+		if (!QDir(dir.data()).exists())
+			return nullptr;
 
+		osg::Node* node = Load3DTiles(dir);
+		if (node)
+			isIntegratedMesh = true;
+		return node;
+}
+
+osg::Node* ModelLoader::LoadIntegratedMesh(std::string path, bool translateToOrigin)
+{
+	std::string dir = path;
+	if (!QDir(path.data()).exists())
+	{
+		std::size_t found = path.find_last_of(".");
+		if (found == std::string::npos)
+			return nullptr;
+		dir = path.substr(0, found) + "/";
+	}
+
+	if (!QDir(dir.data()).exists())
 		return nullptr;
+
+	osg::ref_ptr<osg::Node> node = Load3DTiles(dir);
+	if (!translateToOrigin)
+		return node.release();
+	osg::ComputeBoundsVisitor cbs;
+	node->accept(cbs);
+	osg::MatrixTransform* group = new osg::MatrixTransform;
+	osg::Vec3 center = cbs.getBoundingBox().center();
+	group->setMatrix(osg::Matrix::translate(-center.x(), -center.y(), 0));
+	group->addChild(node.get());
+	return group;
 }
 
 osg::Node* ModelLoader::Load3DTiles(std::string indir)

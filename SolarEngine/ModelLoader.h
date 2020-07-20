@@ -14,6 +14,7 @@ public:
 	ModelLoader();
 	~ModelLoader();
 	static osg::Node* LoadModel(std::string path, bool& isIntegratedMesh);
+	static osg::Node* LoadIntegratedMesh(std::string path, bool translateToOrigin = false);
 	static osg::Node* Load3DTiles(std::string indir);
 	static osg::Node* Load3DTiles(std::string indir, osg::BoundingBox mask, bool intersects);
 	static osg::Node* Load3DTiles(std::string indir, std::vector<std::string> maskTiles, bool include);
