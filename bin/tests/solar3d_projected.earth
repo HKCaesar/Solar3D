@@ -66,8 +66,8 @@ osgEarth Sample. Like boston.earth, but on a projected map
   </annotations>
 
   <viewpoints time="1.0">
-    <viewpoint name="OAP3D" heading="24.261" height="0" lat="42.3301" long="-71.0689" pitch="-21.6" range="3450"/>
-    <viewpoint name="CAD" heading="24.261" height="0" lat="42.3401" long="-71.0689" pitch="-21.6" range="3450"/>
+    <viewpoint name="OAP3D" heading="24.261" height="0" lat="42.3301" long="-71.0689" pitch="-21.6" range="2450"/>
+    <viewpoint name="CAD" heading="24.261" height="0" lat="42.34201" long="-71.0689" pitch="-10.6" range="1450"/>
     <viewpoint name="OAP3D" heading="24.261" height="0" x="329343" y="4688076" pitch="-21.6" range="2450" srs="+proj=utm +zone=19 +ellps=GRS80 +units=m +no_defs"/>
     <viewpoint name="CAD" heading="24.261" height="0" x="329343" y="4689076" pitch="-21.6" range="2450" srs="+proj=utm +zone=19 +ellps=GRS80 +units=m +no_defs"/>
   </viewpoints>

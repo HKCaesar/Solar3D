@@ -118,6 +118,8 @@
     <ClInclude Include="..\SolarEngine\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\tests\boston.earth" />
+    <None Include="..\bin\tests\boston_projected.earth" />
     <None Include="..\bin\tests\solar3d_global.earth" />
     <None Include="..\bin\tests\solar3d_projected.earth" />
   </ItemGroup>
