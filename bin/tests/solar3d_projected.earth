@@ -13,8 +13,10 @@ osgEarth Sample. Like boston.earth, but on a projected map
         </profile>
     </options>
     
-    <image name="readymap_imagery" driver="tms">
-        <url>http://readymap.org/readymap/tiles/1.0.0/22/</url>
+    <image name="arcgis-world-imagery" driver="arcgis">
+        <url>http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/</url>
+		<nodata_image>http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/100/0/0.jpeg</nodata_image>
+		<cache_policy usage="no_cache"/>
     </image>
     
     <!--<elevation name="readymap_elevation" driver="tms">
