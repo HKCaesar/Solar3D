@@ -67,6 +67,12 @@ Solar3D DEMOs:
 4. vcpkg. Available online: https://github.com/microsoft/vcpkg
 5. OpenSceneGraph Plugins. http://www.openscenegraph.org/index.php/documentation/user-guides/61-osgplugins
 
+ ## Video
+https://youtu.be/6zWNaCaH-RE
+
+ ## Publication
+To be published.
+
 ## Contact:
 Jianming Liang
 jian9695@gmail.com
