@@ -3,8 +3,6 @@
 ################################################################################
 
 /.vs/SVFEngine/v16
-/bin/cache
-/bin/street_points_svf.txt
 *.tlog
 *.obj
 *.log
@@ -13,25 +11,11 @@
 /lib/SVFEngine.lib
 /Release
 /ReleaseD
-*.dll
 *.ipdb
 *.iobj
-*.exe
-*.lib
 /bin/Solar3D.exp
 /.vs/Solar3D/v16
 *.csv
-/bin/depth1.jpg
-/bin/depth1 - Copy.jpg
-/bin/depth.jpg
-/bin/POS_Z.png
-/bin/POS_Y.png
-/bin/POS_X.png
-/bin/NEG_Z.png
-/bin/NEG_Y.png
-/bin/NEG_X.png
-/bin/fisheye2.png
-/bin/fisheye.png
 /.vs/osgdb_oap3d/v16/.suo
 *.db
 /OAP3DPlugin/.vs/osgdb_oap3d/v16
