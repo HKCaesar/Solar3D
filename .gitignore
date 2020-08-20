@@ -7,7 +7,6 @@
 *.obj
 *.log
 *.pdb
-*.txt
 /lib/SVFEngine.lib
 /Release
 /ReleaseD
