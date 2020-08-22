@@ -23,7 +23,7 @@ Solar3D DEMOs:
 
  ## 3.Build From Source
 **Required build tools:**
- CMake >= 3.10
+ CMake >= 3.15
 
 **Required dependencies:**
 The easiest way to obtain these dependencies is to install using vcpkg, a C++ package management tool for Windows, Linux and MacOS.
