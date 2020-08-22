@@ -21,6 +21,20 @@ Solar3D DEMOs:
 (5) Solar3D/bin/Example_Solar3D_Global.bat. Start with a global osgEarth scene. This example shows how to position CAD and OAP3D models in a global scene.
 (6) Solar3D/bin/Example_Solar3D_Projected.bat. Start with a local osgEarth scene. This example shows how to position CAD and OAP3D models in a local scene.
 
+ ## 3.Build From Source
+**Required build tools:**
+ CMake >= 3.10
+
+**Required dependencies:**
+The easiest way to obtain these dependencies is to install using vcpkg, a C++ package management tool for Windows, Linux and MacOS.
+For Windows, a Visual Studio 2019 solution is available with all required dependencies included.
+
+Dependency | vcpkg package
+------------ | -------------
+qt5-base >= 5.12 | vcpkg install qt5-base:x64-window
+osgEarth >= 2.10 | vcpkg install osgearth:x64-windows
+OpenSceneGraph >= 3.6.4 | vcpkg install osg:x64-windows
+ 
  ## References
 1. GRASS GIS r.sun. Available online: https://grass.osgeo.org/grass78/manuals/r.sun.html
 2. OpenSceneGraph. Available online: http://www.openscenegraph.org
