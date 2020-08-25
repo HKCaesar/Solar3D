@@ -29,7 +29,6 @@ email: hofierka@geomodel.sk,marcel.suri@jrc.it,suri@geomodel.sk,
  /*v. 2.1 January 2003, code optimization by Thomas Huld, JH */
  /*v. 3.0 February 2006, several changes (shadowing algorithm, earth's curvature JH */
 
- //#include "cutil_inline.h"
 #include "GrassSolar.h"
 #include <fstream>
 #include <sstream>

@@ -155,15 +155,7 @@ public:
 		newrad.m_reflected = rad.m_reflected + this->m_reflected;
 		return newrad;
 	}
-	//SolarRadiation operator*(const SolarRadiation& rad,const float& val)
-	//{
-	//	SolarRadiation newrad;
-	//	newrad.beam=rad.beam*val;
-	//	newrad.global=rad.global*val;
-	//	newrad.diffuse=rad.diffuse*val;
-	//	newrad.reflected=rad.reflected*val;
-	//	return newrad;
-	//}
+
 	SolarRadiation operator*(const SolarRadiation& rad)
 	{
 		SolarRadiation newrad;
@@ -192,26 +184,6 @@ public:
 		newrad.m_reflected = m_reflected / val;
 		return newrad;
 	}
-
-	//SolarRadiation operator/(const SolarRadiation& rad)
-	//{
-	//	SolarRadiation newrad;
-	//	newrad.beam=rad.beam/this->beam;
-	//	newrad.global=rad.global/this->global;
-	//	newrad.diffuse=rad.diffuse/this->diffuse;
-	//	newrad.reflected=rad.reflected/this->reflected;
-	//	return newrad;
-	//}
-	//SolarRadiation operator/(const SolarRadiation& rad,const float& val)
-	//{
-	//	SolarRadiation newrad;
-	//	newrad.beam=rad.beam/val;
-	//	newrad.global=rad.global/val;
-	//	newrad.diffuse=rad.diffuse/val;
-	//	newrad.reflected=rad.reflected/val;
-	//	return newrad;
-	//}
-
 };
 
 //structure of solar vector
@@ -220,7 +192,7 @@ struct SunVector
 	float m_time;
 	float m_azimuth;//solar azimuth angle
 	float m_alt; //solar elevation angle
-	SunVector() {}
+	SunVector() { m_time = 0;  m_azimuth = 0; m_alt = 0; }
 	SunVector(float azimuthAngle, float altAngle) { m_azimuth = azimuthAngle; m_alt = altAngle; }
 };
 
@@ -285,6 +257,7 @@ struct SolarParam
 		m_startDay = 1;
 		m_endDay = 1;
 		m_lon = -9999;
+		m_lat = 0;
 		m_isSingleDay = true;
 		m_useLatitudeOverride = true;
 		m_useElevationOverride = true;

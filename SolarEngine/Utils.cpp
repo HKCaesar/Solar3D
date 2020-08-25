@@ -3,6 +3,8 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <sstream>
+#include <RenderSurface.h>
+#include <osgDB/ReadFile>
 
 //Angle between vector (x,y) and the positive Y axis (0,1) with origin at (0,0)
 double Utils::calAzimuthAngle(double x, double y)
@@ -247,4 +249,63 @@ bool Utils::nodeHasNormals(osg::Node* node)
 	}
 
 	return false;
+}
+
+CustomControls::CustomImageControl* Utils::createCompass(CustomControls::ControlCanvas* cs, int viewWidth, int viewHeight)
+{
+	char fragmentSource[] =
+		"uniform sampler2D texture0;\n"
+		"uniform float rotateAngle;\n"
+		"vec2 rotateXY(vec2 xy, float rotation)\n"
+		"{\n"
+		"   float mid = 0.5;\n"
+		"   float x = cos(rotation) * (xy.x - mid) + sin(rotation) * (xy.y - mid) + mid;\n"
+		"   float y = cos(rotation) * (xy.y - mid) - sin(rotation) * (xy.x - mid) + mid;\n"
+		"   return vec2(x,y);\n"
+		"}\n"
+		"void main(void) \n"
+		"{\n"
+		"    vec4 color = texture2D(texture0, rotateXY(gl_TexCoord[0].xy, rotateAngle * 0.0174533));\n"
+		"    if(color.a < 0.5)\n"
+		"      color = vec4(0.1,0.1,0.1,0.4);\n"
+		"    else\n"
+		"      color = color + vec4(0,0.3,0,0);\n"
+		"    gl_FragColor = color;\n"
+		"}\n";
+	osg::ref_ptr<osg::Image> img = osgDB::readImageFile("./data/compass.png");
+	osg::ref_ptr<osg::Texture2D> tex = new osg::Texture2D;
+	tex->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR);
+	tex->setFilter(osg::Texture::MAG_FILTER, osg::Texture::LINEAR);
+	tex->setImage(img.get());
+
+	CustomControls::CustomImageControl* imageCtrl = new CustomControls::CustomImageControl;
+	imageCtrl->setSize(128, 128);
+	imageCtrl->setPosition(viewWidth - 128 - 10, 10);
+	imageCtrl->setImage(img.get());
+	imageCtrl->getOrCreateStateSet()->addUniform(new osg::Uniform("rotateAngle", 0.0f));
+
+	ProgramBinder binder;
+	binder.initialize("NorthArrowProgram", imageCtrl->getOrCreateStateSet());
+	binder.setFragmentShader(fragmentSource);
+	imageCtrl->getOrCreateStateSet()->setTextureAttributeAndModes(0, tex.get(), osg::StateAttribute::ON);
+	cs->addChild(imageCtrl);
+	return imageCtrl;
+}
+
+SolarParam Utils::createDefaultSolarParam()
+{
+	SolarParam param;
+	param.m_aspect = 270;
+	param.m_slope = 0;
+	param.m_lon = -9999;
+	param.m_lat = 37.5131;
+	param.m_day = 183;
+	param.m_time_step = 1;
+	param.m_linke = 3.0;
+	param.m_startDay = param.m_day;
+	param.m_endDay = param.m_day;
+	param.m_isSingleDay = true;
+	param.m_isInstantaneous;
+	param.m_elev = 0;
+	return param;
 }

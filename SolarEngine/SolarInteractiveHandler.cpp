@@ -38,7 +38,7 @@ SolarInteractiveHandler::SolarInteractiveHandler(
 	m_cubemap2fisheyeCamera->setRenderOrder(osg::Camera::PRE_RENDER, m_cubemap->getNumChildren());
 	root->addChild(m_cubemap2fisheyeCamera);
 
-	//create point labels
+	//create a point labels renderer
 	m_pointRenderer = new PointsRenderer;
 
 	osg::ref_ptr<osg::Image> depthImage = new osg::Image;
@@ -130,12 +130,13 @@ void SolarInteractiveHandler::processIntersection(osgUtil::LineSegmentIntersecto
 	//_viewer->setCameraManipulator(nullptr, false);
 	//_viewer->getCamera()->setNodeMask(true);
 
-	//Write out fisheye images
+	//Write out fisheye images for testing
 	for (size_t i = 0; i < m_cubemap->getNumChildren(); i++)
 	{
 		CubemapSurface* face = m_cubemap->getFace(i);
 		//osgDB::writeImageFile(*face->Image(), face->getName() + ".png");
 	}
+	//Write fisheye and cubemap to files for testing
 	//osg::ref_ptr<osg::Image> fisheye = _cubemap->toHemisphericalImage(512, 512);
 	//osgDB::writeImageFile(*fisheye, "fisheye2.png");
 	//osgDB::writeImageFile(*m_cubemap2fisheyeCamera->Image(), "fisheye.png");
@@ -302,6 +303,7 @@ osg::Image* SolarInteractiveHandler::getFisheyeForPoint(const int& pointId)
 	return m_pointRenderer->getFisheyeForPoint(pointId);
 }
 
+//Get the world/geo coordinates at the mouse cursor position
 std::tuple<osg::Vec3d, osg::Vec3d> SolarInteractiveHandler::queryCoordinatesAtMouse(const float& mouseX, const float& mouseY)
 {
 	osg::Image* depthImage = m_pointRenderer->depthImage();

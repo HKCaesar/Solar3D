@@ -8,6 +8,7 @@
 #include <osg/Node>
 #include <osg/BoundingBox>
 
+//Load OAP3Ds (integrated meshes)
 class ModelLoader
 {
 public:

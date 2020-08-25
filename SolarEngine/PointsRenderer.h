@@ -8,7 +8,7 @@ enum ActionTypeEnum { PUSH, POP };
 struct Action : SolarRadiationPoint
 {
 	ActionTypeEnum actionType;
-	Action() {}
+	Action() { actionType = ActionTypeEnum::PUSH; }
 	Action(ActionTypeEnum type, SolarRadiationPoint point) { actionType = type; *((SolarRadiationPoint*)this) = point; }
 };
 
@@ -24,19 +24,26 @@ public:
 	SolarRadiationPoint _point;
 };
 
+//Render points in world-space
+//Use a depth map of the sceen to perform occlusion query
+//Render a point only if at least one pixel in the point's screen bounding box is visible compared to the depth map.
+//Avoid z fighting
 class PointsRenderer : public osg::Group
 {
 public:
 	PointsRenderer() { m_sceneDepthImage = nullptr; m_sceneCamera = nullptr; m_pointId = 0; m_toggleTextDisplay = true; };
-	//void pushPoint(const osg::Vec3d& point, const SolarParam& param, const SolarRadiation& rad);
+	//Add a point label
 	void pushPoint(SolarRadiationPoint& point, const osg::Image* img = nullptr);
+	//Remove a point label
 	void popPoint();
 	void undo();
 	void redo();
+	//export points to a text file
 	void exportPoints(const std::string& filename);
 	void setSceneDepthImage(osg::Image* depthImg) { m_sceneDepthImage = depthImg; };
 	void setSceneCamera(osg::Camera* sceneCamera) { m_sceneCamera = sceneCamera; };
 	void postDrawUpdate();
+	//query point at the cursor position
 	bool queryPoint(const float& mouseX, const float& mouseY, SolarRadiationPoint& solarPoint);
 	osg::Image* getFisheyeForPoint(const int& pointId);
 	osg::Image* depthImage() { return m_sceneDepthImage; }
@@ -54,6 +61,7 @@ private:
 	void performAction(const Action& action);
 	void pushPointInternal(const SolarRadiationPoint& point);
 	void popPointInternal();
+	//Compare the screen bounding box of a point against the depth map to determine its visibility
 	bool isPointVisible(const osg::Matrixd& projInverse, const osg::Matrixd& viewInverse, const osg::Vec3d& eye, const osg::Vec2& uv, double distTocamera, int windowSize = 5);
 };
 

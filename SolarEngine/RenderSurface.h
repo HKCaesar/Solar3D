@@ -47,6 +47,7 @@ struct ColorUB3
 	}
 };
 
+//Shader help class
 class ProgramBinder
 {
 public:
@@ -130,6 +131,7 @@ private:
 	osg::StateSet* m_stateset;
 };
 
+//Class used to render a full-screen rectangle
 class ScreenOverlay : public osg::Geode
 {
 public:
@@ -169,6 +171,7 @@ private:
 	ProgramBinder m_programBinder;
 };
 
+//Camera used to render to a texture
 class RenderSurface : public osg::Camera
 {
 protected:
@@ -222,6 +225,7 @@ public:
 	int width() { return m_image->s(); }
 	int height() { return m_image->t(); }
 
+	//Resize the camera buffer
 	void resize(int newWidth, int newHeight)
 	{
 		if (!m_texture)
@@ -237,6 +241,7 @@ public:
 	}
 };
 
+//Camera with a built-in ScreenOverlay used for rendering to texture
 class OverlayRenderSurface : public RenderSurface
 {
 private:

@@ -8,6 +8,7 @@
 #include "Utils.h"
 #include <osg/Node>
 
+//Calculate solar radiation with the GRASS GIS r.sun model
 class GrassSolar
 {
 public:

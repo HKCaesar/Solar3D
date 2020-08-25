@@ -17,25 +17,23 @@
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarth/Registry>
 
-#include "CustomControls.h"
+#include "Utils.h"
 #include "GrassSolar.h"
 #include "SolarInteractiveHandler.h"
 #include "ModelLoader.h"
 
 using namespace osgEarth;
 using namespace osgEarth::Util;
-//using namespace osgEarth::Drivers;
-//using namespace osgEarth::Features;
-//using namespace osgEarth::Symbology;
 
 const int UI_FONT_SIZE = 18;
 SolarParam m_solarParam;
 size_t m_frameCount = 1;
-
+std::map<std::string, CustomControls::Control*> m_controls;
 osg::ref_ptr<SolarInteractiveHandler> m_solarInteractiveHandler;
+MapNode* m_mapNode;
+
 CustomControls::VBox* m_mainUIControl;
 CustomControls::HBox* m_popupControl;
-std::map<std::string, CustomControls::Control*> m_controls;
 CustomControls::VBox* m_parametersControl;
 CustomControls::VBox* m_fisheyeControl;
 CustomControls::VBox* m_resultLabelsControl = new CustomControls::VBox();
@@ -44,67 +42,7 @@ CustomControls::LabelControl* m_globalRadLabel;
 CustomControls::LabelControl* m_beamRadLabel;
 CustomControls::LabelControl* m_diffuseRadLabel;
 CustomControls::LabelControl* m_statusBar;
-MapNode* m_mapNode;
 CustomControls::CustomImageControl* m_compass;
-
-CustomControls::CustomImageControl* createCompass(CustomControls::ControlCanvas* cs, int viewWidth, int viewHeight)
-{
-  char fragmentSource[] =
-    "uniform sampler2D texture0;\n"
-    "uniform float rotateAngle;\n"
-    "vec2 rotateXY(vec2 xy, float rotation)\n"
-    "{\n"
-    "   float mid = 0.5;\n"
-    "   float x = cos(rotation) * (xy.x - mid) + sin(rotation) * (xy.y - mid) + mid;\n"
-    "   float y = cos(rotation) * (xy.y - mid) - sin(rotation) * (xy.x - mid) + mid;\n"
-    "   return vec2(x,y);\n"
-    "}\n"
-    "void main(void) \n"
-    "{\n"
-    "    vec4 color = texture2D(texture0, rotateXY(gl_TexCoord[0].xy, rotateAngle * 0.0174533));\n"
-    "    if(color.a < 0.5)\n"
-    "      color = vec4(0.1,0.1,0.1,0.4);\n"
-    "    else\n"
-    "      color = color + vec4(0,0.3,0,0);\n"
-    "    gl_FragColor = color;\n"
-    "}\n";
-  osg::ref_ptr<osg::Image> img = osgDB::readImageFile("./data/compass.png");
-  osg::ref_ptr<osg::Texture2D> tex = new osg::Texture2D;
-  tex->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR);
-  tex->setFilter(osg::Texture::MAG_FILTER, osg::Texture::LINEAR);
-  tex->setImage(img.get());
-
-  CustomControls::CustomImageControl* imageCtrl = new CustomControls::CustomImageControl;
-  imageCtrl->setSize(128, 128);
-  imageCtrl->setPosition(viewWidth - 128 - 10, 10);
-  imageCtrl->setImage(img.get());
-  imageCtrl->getOrCreateStateSet()->addUniform(new osg::Uniform("rotateAngle", 0.0f));
-  
-  ProgramBinder binder;
-  binder.initialize("NorthArrowProgram", imageCtrl->getOrCreateStateSet());
-  binder.setFragmentShader(fragmentSource);
-  imageCtrl->getOrCreateStateSet()->setTextureAttributeAndModes(0, tex.get(), osg::StateAttribute::ON);
-  cs->addChild(imageCtrl);
-  return imageCtrl;
-}
-
-SolarParam createSolarParam()
-{
-  SolarParam param;
-  param.m_aspect = 270;
-  param.m_slope = 0;
-  param.m_lon = -9999;
-  param.m_lat = 37.5131;
-  param.m_day = 183;
-  param.m_time_step = 1;
-  param.m_linke = 3.0;
-  param.m_startDay = param.m_day;
-  param.m_endDay = param.m_day;
-  param.m_isSingleDay = true;
-  param.m_isInstantaneous;
-  param.m_elev = 0;
-  return param;
-}
 
 class ParamControlBase : public CustomControls::HBox
 {
@@ -519,7 +457,7 @@ void createMainUIControls(CustomControls::ControlCanvas* cs, int viewWidth, int 
 
   cs->addControl(m_mainUIControl);
 
-  m_compass = createCompass(cs, viewWidth, viewHeight);
+  m_compass = Utils::createCompass(cs, viewWidth, viewHeight);
   cs->addControl(m_compass);
 
   m_statusBar = new CustomControls::LabelControl("", fontColor);
@@ -701,7 +639,7 @@ public:
 
 int main(int argc, char** argv)
 {
-  m_solarParam = createSolarParam();
+  m_solarParam = Utils::createDefaultSolarParam();
 
   osg::ArgumentParser arguments(&argc, argv);
 
@@ -784,10 +722,6 @@ int main(int argc, char** argv)
   createMainUIControls(canvas, width, height);
   createPopup(canvas);
 
-  //osg::Group* group = (osg::Group*)viewer.getCamera()->getChild(0);
- // group->addChild(m_northArrow);
-  // zoom to a good startup position
-
   viewer.addEventHandler(m_solarInteractiveHandler);
   viewer.addEventHandler(new MainUIEventHandler);
   viewer.addEventHandler(new osgViewer::ThreadingHandler);
@@ -804,8 +738,6 @@ int main(int argc, char** argv)
   // add the state manipulator
   viewer.addEventHandler(new osgGA::StateSetManipulator(viewer.getCamera()->getOrCreateStateSet()));
 
- 
-  //viewer.setUpViewInWindow(50, 50, 1024, 768);
   viewer.realize();
   while (!viewer.done())
   {

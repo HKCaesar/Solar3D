@@ -53,7 +53,6 @@ void PointsRenderer::pushPointInternal(const SolarRadiationPoint& point)
 		textsShader->addShader(new osg::Shader(osg::Shader::VERTEX, vertexShaderSource));
 	}
 
-	//m_solarPoints.push_back(radPoint);
 	std::string label = Utils::value2String(point.m_global / 1000, 3);
 	m_doStack.push_back(Action(ActionTypeEnum::PUSH, point));
 
@@ -63,13 +62,6 @@ void PointsRenderer::pushPointInternal(const SolarRadiationPoint& point)
 	polyGeom->setVertexArray(vertices.get());
 	polyGeom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertices->size()));
 	polyGeom->getOrCreateStateSet()->setAttribute(pointsShader.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-
-	//osg::ref_ptr<osg::Geode> pointFar = new osg::Geode;
-	//pointFar->addDrawable(polyGeom.get());
-	////pointFar->getOrCreateStateSet()->setMode(GL_DEPTH_TEST, osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
-	//pointFar->setCullingActive(false);
-	//osg::ref_ptr<osg::Uniform> pointSizeFar = new osg::Uniform("pointSize", 5.0f);
-	//pointFar->getOrCreateStateSet()->addUniform(pointSizeFar.get());
 
 	osg::ref_ptr<osg::Geode> pointNear = new osg::Geode;
 	pointNear->addDrawable(polyGeom.get());
@@ -112,13 +104,6 @@ void PointsRenderer::pushPoint(SolarRadiationPoint& point, const osg::Image* img
 	m_doStack.push_back(Action(ActionTypeEnum::PUSH, point));
 	pushPointInternal(point);
 }
-
-//void PointsRenderer::pushPoint(const osg::Vec3d& point, const SolarParam& param, const SolarRadiation& rad)
-//{
-//	SolarRadiationPoint radPoint(point, param, rad);
-//	radPoint.m_id = getNumChildren();
-//	pushPointInternal(radPoint);
-//}
 
 void PointsRenderer::popPointInternal()
 {

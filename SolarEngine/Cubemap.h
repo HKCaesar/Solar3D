@@ -12,6 +12,7 @@
 #include <osg/TextureCubeMap>
 #include "RenderSurface.h"
 
+//A cubemap face
 class CubemapSurface : public RenderSurface
 {
 public:
@@ -27,6 +28,7 @@ public:
 	void update();
 };
 
+//A cubemap with six faces
 class Cubemap : public osg::Group
 {
 private:
@@ -39,6 +41,7 @@ public:
 	CubemapSurface* getFace(float alt, float azimuth);
 	RenderSurface* toHemisphericalSurface();
 	osg::Image* toHemisphericalImage(int width, int height);
+	//Query if a solar direction is shadowed
 	bool isShadowed(double alt, double azimuth);
 	void setWallShaderOn(bool on);
 private:

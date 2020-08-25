@@ -10,6 +10,7 @@
 #include <osg/Image>
 #include <string>
 #include "TypeDef.h"
+#include "CustomControls.h"
 
 class Utils
 {
@@ -25,4 +26,6 @@ public:
 	static osg::Vec3 worldPosFromDepth(float depth, const osg::Matrixd& projMatrixInv, const osg::Matrixd& viewMatrixInv, const osg::Vec2& uv);
 	static std::string padRight(std::string str, const size_t num, const char paddingChar = ' ');
 	static bool nodeHasNormals(osg::Node* node);
+	static CustomControls::CustomImageControl* createCompass(CustomControls::ControlCanvas* cs, int viewWidth, int viewHeight);
+	static SolarParam createDefaultSolarParam();
 };

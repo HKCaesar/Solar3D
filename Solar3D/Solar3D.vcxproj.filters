@@ -88,7 +88,11 @@
     <None Include="..\bin\tests\solar3d_projected.earth">
       <Filter>Examples</Filter>
     </None>
-    <None Include="..\bin\tests\boston.earth" />
-    <None Include="..\bin\tests\boston_projected.earth" />
+    <None Include="..\bin\tests\boston.earth">
+      <Filter>Examples</Filter>
+    </None>
+    <None Include="..\bin\tests\boston_projected.earth">
+      <Filter>Examples</Filter>
+    </None>
   </ItemGroup>
 </Project>
