@@ -45,8 +45,9 @@ OpenSceneGraph >= 3.6.4 | vcpkg install osg:x64-windows
  ## Demonstration Video
 https://youtu.be/6zWNaCaH-RE
 
- ## Demonstration Publication
-To be published (https://www.preprints.org/manuscript/202007.0556/v1).
+ ## Publication
+Liang, J.; Gong, J.; Xie, X.; Sun, J. Solar3D: An Open-Source Tool for Estimating Solar Radiation in Urban Environments. ISPRS Int. J. Geo-Inf. 2020, 9, 524.
+https://www.mdpi.com/2220-9964/9/9/524
 
 ## Contact:
 Jianming Liang
